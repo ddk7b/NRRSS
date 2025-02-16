@@ -17,5 +17,8 @@ namespace NRRSS
 
         [Description("The relative rotation of the schematic to the room.")]
         public Vector3 Rotation { get; set; } = Vector3.zero;
+
+        [Description("The chance of the schematic spawning. (out of 100)")]
+        public int Chance { get; set; } = 100;
     }
 }

@@ -20,7 +20,7 @@ namespace NRRSS
 
         public virtual string Prefix { get; } = "NRRSS";
 
-        public virtual Version Version { get; } = new Version(1, 0, 1);
+        public virtual Version Version { get; } = new Version(1, 0, 2);
 
         public override void OnEnabled()
         {
@@ -55,22 +55,28 @@ namespace NRRSS
                 {
                     if (room.Type == configRoom.TargetRoom)
                     {
-                        Log.Debug($"Found schematic room: {configRoom.SchematicName}");
-                        Quaternion roomRot = room.Rotation;
-                        Log.Debug(roomRot);
-                        Vector3 rotatedPositionOffset = roomRot * configRoom.Position;
-                        Vector3 worldPosition = room.Position + rotatedPositionOffset;
-                        Quaternion configRotation = Quaternion.Euler(configRoom.Rotation);
-                        Quaternion worldRotation = roomRot * configRotation;
-                        Log.Debug($"Config: {worldRotation}");
-                        var schematic = ObjectSpawner.SpawnSchematic(configRoom.SchematicName, worldPosition, worldRotation, Vector3.one, null, true);
-                        if (schematic == null)
+                        int spawnChance = configRoom.Chance;
+                        int randomRoll = UnityEngine.Random.Range(0, 100);
+                        if (randomRoll < spawnChance)
                         {
-                            Log.Debug($"Schematic was unable to spawn.");
+                            Quaternion roomRot = room.Rotation;
+                            Vector3 rotatedPositionOffset = roomRot * configRoom.Position;
+                            Vector3 worldPosition = room.Position + rotatedPositionOffset;
+                            Quaternion configRotation = Quaternion.Euler(configRoom.Rotation);
+                            Quaternion worldRotation = roomRot * configRotation;
+                            var schematic = ObjectSpawner.SpawnSchematic(configRoom.SchematicName, worldPosition, worldRotation, Vector3.one, null, true);
+                            if (schematic == null)
+                            {
+                                Log.Debug($"Schematic was unable to spawn.");
+                            }
+                            else
+                            {
+                                Log.Debug($"Schematic was successfully spawned.");
+                            }
                         }
                         else
                         {
-                            Log.Debug($"Schematic was successfully spawned.");
+                            Log.Debug($"{configRoom.SchematicName} failed chance check. Rolled {randomRoll} (needed < {spawnChance}).");
                         }
                     }
                 }
