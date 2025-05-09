@@ -13,7 +13,7 @@ namespace NRRSS
         [Description("Whether or not the plugin is enabled.")]
         public bool IsEnabled { get; set; } = true;
 
-        [Description("Room list for schematics")]
+        [Description("Room list for schematics.")]
         public Dictionary<string, TargetRoomConfig> RoomSpawns { get; set; } = new Dictionary<string, TargetRoomConfig>()
         {
             {
